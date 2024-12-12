@@ -110,7 +110,7 @@ void LedSetting()
 {
     Preferences preferences;
     preferences.begin("sensor", false);
-    if (preferences.getBool("led"))
+    if (!preferences.getBool("led"))
     {
         digitalWrite(LED, LOW);
     }

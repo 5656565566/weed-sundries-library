@@ -23,15 +23,15 @@ void AutomaticLight()
 
     if (brightness_switch)
     {
-        if (brightness > 100)
-        {
-            ledBrightness = 0;
-        }
-        else
-        {
-            ledBrightness = map(brightness, 0, 100, 255, 0);
-        }
+        brightness = constrain(brightness, 0, 100);
+
+        ledBrightness = map(brightness, 0, 100, 0, 255);
+
         analogWrite(LEDPWM, ledBrightness);
+    }
+    else
+    {
+        analogWrite(LEDPWM, 0);
     }
 
     if (human_switch && human && led)

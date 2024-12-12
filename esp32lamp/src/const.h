@@ -1,7 +1,7 @@
 #define TEMP 7
 
-#define LED 1
-#define LEDPWM 2
+#define LED 5
+#define LEDPWM 6
 #define BTN 40
 
 #define SRT602PIN 20

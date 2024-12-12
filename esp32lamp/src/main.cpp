@@ -32,6 +32,9 @@ void debug()
     Serial.print("Human Presence: ");
     Serial.println(human ? "No" : "Yes");
 
+    Serial.print("Led: ");
+    Serial.println(GetLed() ? "Yes" : "No");
+
     preferences.end();
 }
 
@@ -42,6 +45,28 @@ Task task3(1000 * 60, TASK_FOREVER, &loopsyncTime);
 Task task4(500, TASK_FOREVER, &readHumanSensorData);
 Task task5(100, TASK_FOREVER, &LedSetting);
 Task task6(3000, TASK_FOREVER, &debug);
+
+void btnTask();
+
+Task task7(1, TASK_FOREVER, &btnTask);
+
+void btnTask()
+{
+    if (!digitalRead(BTN))
+    {
+        Serial.println("BTN");
+        task7.delay(300);
+        if (!digitalRead(BTN))
+        {
+            Serial.println("BTN");
+            SetLed(!GetLed());
+        }
+        while (!digitalRead(BTN))
+        {
+            task7.delay(100);
+        }
+    }
+}
 
 void setup()
 {
@@ -56,6 +81,7 @@ void setup()
     runner.addTask(task4);
     runner.addTask(task5);
     runner.addTask(task6);
+    runner.addTask(task7);
 
     task1.enable();
     task2.enable();
@@ -63,6 +89,7 @@ void setup()
     task4.enable();
     task5.enable();
     task6.enable();
+    task7.enable();
 
     Serial.begin(115200);
     webServer.begin(); // 启动WiFi和Web服务器
@@ -78,17 +105,6 @@ void loop()
     webServer.handleClient(); // 处理客户端请求
     runner.execute();
     LedSetting();
-    if (!digitalRead(BTN))
-    {
-        Serial.println("BTN");
-        delay(100);
-        if (!digitalRead(BTN))
-        {
-            Serial.println("BTN");
-            delay(100);
-            SetLed(!GetLed());
-        }
-    }
     AutomaticLight();
     updataTime();
 }
